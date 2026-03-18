@@ -763,10 +763,148 @@
 
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  @media (max-width: 800px) {
+  @media (max-width: 1024px) {
+    .container { padding: 18px; }
     .dashboard-grid { grid-template-columns: 1fr; }
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .header-left h1 { font-size: 2.2rem; }
+    .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 800px) {
+    header {
+      align-items: flex-start;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+    }
+
+    .header-left h1 { font-size: 2.2rem; letter-spacing: 3px; }
+    .header-left .subtitle { letter-spacing: 2px; }
+
+    .header-right {
+      width: 100%;
+      text-align: left;
+    }
+
+    .panel,
+    .progress-bar-wrap,
+    .calendar-wrap {
+      padding: 14px;
+    }
+
+    .todo-input-row { flex-wrap: wrap; }
+    .todo-input { flex: 1 1 100%; }
+    .todo-priority-select,
+    .todo-add-btn {
+      flex: 1;
+      min-height: 40px;
+    }
+
+    .todo-filter-row { flex-wrap: wrap; }
+    .filter-btn { flex: 1 1 calc(50% - 6px); padding: 8px 10px; }
+
+    .manage-btn { width: 100%; margin-right: 0; }
+    .save-btn { font-size: 1.15rem; letter-spacing: 2px; }
+
+    .modal { padding: 18px; max-height: 90vh; }
+    .modal h2 { font-size: 1.5rem; letter-spacing: 2px; }
+    .modal-habit-row { gap: 8px; }
+  }
+
+  @media (max-width: 560px) {
+    .container { padding: 12px; }
+
+    .stats-row {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card { padding: 12px; }
+    .stat-value { font-size: 1.8rem; }
+
+    .header-left h1 { font-size: 1.9rem; }
+    .header-right .date-display { font-size: 0.9rem; }
+
+    .progress-info {
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .habit-item {
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .habit-name {
+      flex: 1 1 calc(100% - 58px);
+      min-width: 0;
+      font-size: 0.96rem;
+    }
+
+    .habit-target {
+      width: 100%;
+      text-align: left;
+      padding-left: 36px;
+      font-size: 0.62rem;
+    }
+
+    .todo-item {
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+
+    .todo-text {
+      flex: 1 1 calc(100% - 30px);
+      font-size: 0.88rem;
+      min-width: 0;
+    }
+
+    .todo-prio-badge { margin-left: 28px; }
+    .todo-del-btn { margin-left: auto; }
+
+    .cal-nav button { padding: 6px 8px; font-size: 0.62rem; }
+    .cal-title { font-size: 1.1rem; letter-spacing: 2px; }
+    .cal-day-header { font-size: 0.48rem; }
+    .cal-day { font-size: 0.62rem; }
+
+    .modal { padding: 14px; }
+    .modal-desc { font-size: 0.58rem; }
+
+    .modal-habit-row {
+      display: grid;
+      grid-template-columns: 52px 1fr 58px 52px;
+      align-items: center;
+    }
+
+    .modal input.habit-enddate-input {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    .del-habit-btn {
+      grid-column: 4;
+      justify-self: end;
+    }
+
+    .modal-actions {
+      flex-wrap: wrap;
+    }
+
+    .modal-save-btn,
+    .modal-cancel-btn {
+      width: 100%;
+    }
+
+    .toast {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      font-size: 0.72rem;
+      text-align: center;
+    }
   }
 </style>
 </head>
