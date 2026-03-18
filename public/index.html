@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ROHANTH // HABIT OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Teko:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --accent: #e8c547;
+    --accent2: #c0392b;
+    --green: #27ae60;
+    --orange: #e67e22;
+    --text: #e0e0e0;
+    --muted: #666;
+    --tier1: #e8c547;
+    --tier2: #3498db;
+    --tier3: #9b59b6;
+    --tierT: #e67e22;
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-display: 'Teko', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(232,197,71,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,197,71,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 1240px; margin: 0 auto; padding: 22px; position: relative; z-index: 1; }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(340px, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+
+  .main-column, .side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .panel {
+    background: rgba(17,17,17,0.75);
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 16px;
+    margin-bottom: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-left h1 {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(232,197,71,0.3);
+  }
+
+  .header-left .subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 3px;
+    margin-top: 4px;
+  }
+
+  .header-right {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .header-right .date-display {
+    color: var(--accent);
+    font-size: 1rem;
+    display: block;
+  }
+
+  /* STATS */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card.orange { border-top-color: var(--orange); }
+  .stat-card.orange .stat-value { color: var(--orange); }
+
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, transparent 50%, rgba(232,197,71,0.05) 50%);
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-value span { font-size: 1rem; color: var(--muted); }
+
+  /* SECTION HEADER */
+  .section-header {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* TIER LABELS */
+  .tier-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    padding: 2px 8px;
+    margin-bottom: 10px;
+    margin-top: 6px;
+  }
+
+  .tier-1 { background: rgba(232,197,71,0.1); color: var(--tier1); border-left: 3px solid var(--tier1); }
+  .tier-2 { background: rgba(52,152,219,0.1); color: var(--tier2); border-left: 3px solid var(--tier2); }
+  .tier-3 { background: rgba(155,89,182,0.1); color: var(--tier3); border-left: 3px solid var(--tier3); }
+  .tier-temp { background: rgba(230,126,34,0.1); color: var(--tierT); border-left: 3px solid var(--tierT); }
+
+  /* HABIT ITEMS */
+  .habits-grid { margin-bottom: 12px; }
+
+  .habit-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .habit-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--border);
+    transition: background 0.15s;
+  }
+
+  .habit-item.tier-1-item::before { background: rgba(232,197,71,0.3); }
+  .habit-item.tier-2-item::before { background: rgba(52,152,219,0.3); }
+  .habit-item.tier-3-item::before { background: rgba(155,89,182,0.3); }
+  .habit-item.tier-temp-item::before { background: rgba(230,126,34,0.5); }
+
+  .habit-item.done { background: var(--surface2); border-color: var(--green); }
+  .habit-item.done::before { background: var(--green) !important; }
+  .habit-item:hover { border-color: var(--accent); transform: translateX(2px); }
+
+  .habit-checkbox {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    transition: all 0.15s;
+  }
+
+  .habit-item.done .habit-checkbox {
+    border-color: var(--green);
+    background: var(--green);
+    color: white;
+  }
+
+  .habit-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+  .habit-name {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    flex: 1;
+  }
+
+  .habit-item.done .habit-name {
+    color: var(--green);
+    text-decoration: line-through;
+    text-decoration-color: rgba(39,174,96,0.4);
+  }
+
+  .habit-target {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.4;
+  }
+
+  .days-left-badge {
+    display: inline-block;
+    background: rgba(230,126,34,0.15);
+    color: var(--orange);
+    border: 1px solid rgba(230,126,34,0.3);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    padding: 1px 5px;
+    letter-spacing: 1px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .progress-track { height: 8px; background: var(--border); position: relative; overflow: hidden; }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: white;
+    opacity: 0.6;
+  }
+
+  /* ===== TODO SYSTEM ===== */
+  .todo-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .todo-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    letter-spacing: 1px;
+  }
+
+  .todo-input:focus { border-color: var(--accent); }
+  .todo-input::placeholder { color: var(--muted); }
+
+  .todo-priority-select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 8px;
+    outline: none;
+    cursor: pointer;
+    width: 70px;
+  }
+
+  .todo-add-btn {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .todo-add-btn:hover { background: #f0d060; }
+
+  .todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 5px;
+    position: relative;
+    transition: all 0.15s;
+    overflow: hidden;
+  }
+
+  .todo-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .todo-item.prio-high::before { background: var(--accent2); }
+  .todo-item.prio-mid::before { background: var(--orange); }
+  .todo-item.prio-low::before { background: var(--muted); }
+
+  .todo-item.completed { opacity: 0.45; }
+  .todo-item.completed .todo-text { text-decoration: line-through; color: var(--muted); }
+
+  .todo-checkbox {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .todo-item.completed .todo-checkbox {
+    border-color: var(--green);
+    background: var(--green);
+    color: white;
+  }
+
+  .todo-text {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+  }
+
+  .todo-prio-badge {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+
+  .prio-high .todo-prio-badge { color: var(--accent2); border-color: rgba(192,57,43,0.3); background: rgba(192,57,43,0.08); }
+  .prio-mid .todo-prio-badge { color: var(--orange); border-color: rgba(230,126,34,0.3); background: rgba(230,126,34,0.08); }
+  .prio-low .todo-prio-badge { color: var(--muted); border-color: rgba(102,102,102,0.3); background: rgba(102,102,102,0.08); }
+
+  .todo-del-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .todo-del-btn:hover { color: var(--accent2); }
+
+  .todo-filter-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn.active { border-color: var(--accent); color: var(--accent); }
+
+  .todo-empty {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  /* CALENDAR */
+  .calendar-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+
+  .cal-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .cal-nav button {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 12px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+  }
+
+  .cal-nav button:hover { border-color: var(--accent); color: var(--accent); }
+
+  .cal-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .cal-day-header {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: var(--muted);
+    padding: 4px;
+    letter-spacing: 1px;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    gap: 2px;
+  }
+
+  .cal-day:hover { border-color: var(--accent); }
+  .cal-day.today { border-color: var(--accent); color: var(--accent); }
+  .cal-day.empty, .cal-day.future { cursor: default; opacity: 0.3; }
+
+  .cal-dot { width: 4px; height: 4px; border-radius: 50%; }
+  .cal-day.perfect .cal-dot { background: var(--green); }
+  .cal-day.partial .cal-dot { background: var(--accent); }
+  .cal-day.missed .cal-dot { background: var(--accent2); }
+
+  /* NOTES */
+  .notes-area {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 12px;
+    resize: vertical;
+    min-height: 70px;
+    outline: none;
+    transition: border-color 0.15s;
+    letter-spacing: 1px;
+  }
+
+  .notes-area:focus { border-color: var(--accent); }
+  .notes-area::placeholder { color: var(--muted); }
+
+  /* SAVE BUTTON */
+  .save-btn {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    margin-top: 14px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .save-btn:hover { background: #f0d060; transform: translateY(-1px); }
+
+  /* MANAGE BUTTON */
+  .manage-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-right: 6px;
+    margin-bottom: 14px;
+  }
+
+  .manage-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--green);
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    padding: 12px 20px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    z-index: 1000;
+    pointer-events: none;
+  }
+
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    padding: 24px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  .modal h2 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .modal-desc {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--muted);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+
+  .modal-habit-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .modal input, .modal select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 7px 8px;
+    outline: none;
+  }
+
+  .modal input:focus, .modal select:focus { border-color: var(--accent); }
+
+  .modal input.habit-name-input { flex: 1; min-width: 100px; }
+  .modal input.habit-icon-input { width: 46px; text-align: center; }
+  .modal select.habit-tier-select { width: 75px; }
+  .modal input.habit-target-input { width: 48px; }
+  .modal input.habit-enddate-input { width: 110px; }
+
+  .del-habit-btn {
+    background: transparent;
+    border: 1px solid var(--accent2);
+    color: var(--accent2);
+    width: 26px; height: 26px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .add-habit-btn {
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    padding: 8px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 4px;
+    transition: all 0.15s;
+  }
+
+  .add-habit-btn:hover { border-color: var(--orange); color: var(--orange); }
+  .add-habit-btn.temp { border-color: rgba(230,126,34,0.3); color: rgba(230,126,34,0.6); }
+  .add-habit-btn.temp:hover { border-color: var(--orange); color: var(--orange); }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .modal-save-btn {
+    flex: 1;
+    padding: 10px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    cursor: pointer;
+  }
+
+  .modal-cancel-btn {
+    padding: 10px 16px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    cursor: pointer;
+  }
+
+  .modal-section-divider {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    color: var(--orange);
+    margin: 14px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(230,126,34,0.2);
+  }
+
+  .loading {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-align: center;
+    padding: 30px;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  @media (max-width: 800px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .header-left h1 { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-left">
+      <h1>HABIT OS</h1>
+      <div class="subtitle">// ROHANTH R B — DAILY EXECUTION SYSTEM</div>
+    </div>
+    <div class="header-right">
+      <span class="date-display" id="todayDisplay"></span>
+      <span id="dayDisplay"></span>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">// STREAK</div>
+      <div class="stat-value" id="streakVal">—<span> days</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">// 30D RATE</div>
+      <div class="stat-value" id="rateVal">—<span>%</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">// TODAY HABITS</div>
+      <div class="stat-value" id="todayRate">0<span>%</span></div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-label">// TODOS LEFT</div>
+      <div class="stat-value" id="todosLeft">0<span> tasks</span></div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span style="color:var(--muted)">// TODAY'S HABIT PROGRESS</span>
+      <span id="progressText" style="color:var(--accent)">0 / 0</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="main-column">
+
+      <!-- HABITS -->
+      <div class="panel" id="habitsSection">
+        <div class="loading">LOADING MISSIONS...</div>
+      </div>
+
+      <!-- NOTES + SAVE -->
+      <div class="panel">
+        <div class="section-header">// FIELD NOTES</div>
+        <textarea class="notes-area" id="notesArea" placeholder="// log thoughts, blockers, wins for today..."></textarea>
+        <button class="save-btn" onclick="saveToday()">▶ COMMIT TODAY'S LOG</button>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="side-column">
+
+      <!-- TODO SYSTEM -->
+      <div class="panel">
+        <div class="section-header">// TACTICAL TODOS</div>
+
+        <!-- Add todo -->
+        <div class="todo-input-row">
+          <input class="todo-input" id="todoInput" placeholder="// add task..." onkeydown="if(event.key==='Enter') addTodo()"/>
+          <select class="todo-priority-select" id="todoPriority">
+            <option value="high">🔴 HIGH</option>
+            <option value="mid" selected>🟡 MID</option>
+            <option value="low">⚪ LOW</option>
+          </select>
+          <button class="todo-add-btn" onclick="addTodo()">ADD</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="todo-filter-row">
+          <button class="filter-btn active" onclick="setFilter('all', this)">ALL</button>
+          <button class="filter-btn" onclick="setFilter('active', this)">ACTIVE</button>
+          <button class="filter-btn" onclick="setFilter('high', this)">🔴 HIGH</button>
+          <button class="filter-btn" onclick="setFilter('done', this)">DONE</button>
+        </div>
+
+        <div id="todoList"></div>
+      </div>
+
+      <!-- CALENDAR -->
+      <div class="panel">
+        <div class="calendar-wrap" style="padding:0;border:none;background:transparent">
+          <div class="cal-nav">
+            <button onclick="changeMonth(-1)">◀ PREV</button>
+            <div class="cal-title" id="calTitle"></div>
+            <button onclick="changeMonth(1)">NEXT ▶</button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- HABITS MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2>CONFIGURE HABITS</h2>
+    <div class="modal-desc">
+      TIER 1 = non-negotiable daily | TIER 2 = target 5/7 days | TIER 3 = boundary habits<br/>
+      TEMP = short-term sprint habit with end date (auto-removes when expired)
+    </div>
+
+    <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);margin-bottom:6px;letter-spacing:1px">
+      ICON &nbsp;|&nbsp; NAME &nbsp;|&nbsp; TIER &nbsp;|&nbsp; ×/WK &nbsp;|&nbsp; END DATE (TEMP only)
+    </div>
+
+    <div id="modalHabitList"></div>
+
+    <button class="add-habit-btn" onclick="addHabitRow(false)">+ ADD PERMANENT HABIT</button>
+    <button class="add-habit-btn temp" onclick="addHabitRow(true)" style="margin-top:6px">⚡ ADD TEMPORARY HABIT (with end date)</button>
+
+    <div class="modal-actions">
+      <button class="modal-cancel-btn" onclick="closeModal()">CANCEL</button>
+      <button class="modal-save-btn" onclick="saveConfig()">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = window.location.origin;
+
+  let habits = [];
+  let todayLog = {};
+  let calYear, calMonth;
+  let monthLogs = {};
+  let todos = [];
+  let todoFilter = 'all';
+
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+
+  const days = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  document.getElementById('todayDisplay').textContent =
+    `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+  document.getElementById('dayDisplay').textContent = days[today.getDay()];
+
+  calYear = today.getFullYear();
+  calMonth = today.getMonth();
+
+  // ============ INIT ============
+  async function init() {
+    await loadConfig();
+    await loadStats();
+    await loadMonthLogs();
+    loadTodos();
+    renderHabits();
+    renderCalendar();
+    renderTodos();
+  }
+
+  // ============ HABITS ============
+  async function loadConfig() {
+    try {
+      const res = await fetch(`${API}/api/config`);
+      const data = await res.json();
+      // Filter out expired temp habits
+      habits = (data.habits || []).filter(h => {
+        if (h.temp && h.endDate && h.endDate < todayStr) return false;
+        return true;
+      });
+      const year = today.getFullYear();
+      const month = String(today.getMonth()+1).padStart(2,'0');
+      const logsRes = await fetch(`${API}/api/logs/${year}/${month}`);
+      const logsData = await logsRes.json();
+      if (logsData[todayStr]) {
+        todayLog = logsData[todayStr].habits || {};
+        document.getElementById('notesArea').value = logsData[todayStr].notes || '';
+      }
+    } catch(e) { showToast('CONNECTION ERROR', true); }
+  }
+
+  async function loadStats() {
+    try {
+      const res = await fetch(`${API}/api/stats`);
+      const data = await res.json();
+      document.getElementById('streakVal').innerHTML = `${data.streak}<span> days</span>`;
+      document.getElementById('rateVal').innerHTML = `${data.completion}<span>%</span>`;
+    } catch(e) {}
+  }
+
+  async function loadMonthLogs() {
+    try {
+      const year = calYear;
+      const month = String(calMonth+1).padStart(2,'0');
+      const res = await fetch(`${API}/api/logs/${year}/${month}`);
+      monthLogs = await res.json();
+    } catch(e) {}
+  }
+
+  function daysLeft(endDate) {
+    if (!endDate) return null;
+    const diff = Math.ceil((new Date(endDate) - new Date(todayStr)) / (1000*60*60*24));
+    return diff;
+  }
+
+  function renderHabits() {
+    const section = document.getElementById('habitsSection');
+    const tiers = [1, 2, 3];
+    const tierNames = ['NON-NEGOTIABLE — DAILY', 'TARGET — 5 OF 7 DAYS', 'BOUNDARY HABITS'];
+    const tierClasses = ['tier-1', 'tier-2', 'tier-3'];
+
+    let html = `<div class="section-header">// TODAY'S MISSIONS</div>`;
+
+    // Permanent tiers
+    tiers.forEach((tier, i) => {
+      const tierHabits = habits.filter(h => h.tier === tier && !h.temp);
+      if (!tierHabits.length) return;
+      html += `<div class="tier-label ${tierClasses[i]}">${tierNames[i]}</div>`;
+      tierHabits.forEach(h => {
+        const done = !!todayLog[h.id];
+        html += habitHTML(h, done, `tier-${tier}-item`);
+      });
+    });
+
+    // Temporary habits
+    const tempHabits = habits.filter(h => h.temp);
+    if (tempHabits.length) {
+      html += `<div class="tier-label tier-temp">⚡ SPRINT HABITS — TIME LIMITED</div>`;
+      tempHabits.forEach(h => {
+        const done = !!todayLog[h.id];
+        html += habitHTML(h, done, 'tier-temp-item');
+      });
+    }
+
+    html += `<button class="manage-btn" onclick="openModal()">⚙ CONFIGURE HABITS</button>`;
+
+    section.innerHTML = html;
+    updateProgress();
+  }
+
+  function habitHTML(h, done, tierClass) {
+    const dl = daysLeft(h.endDate);
+    const daysLeftStr = h.temp && dl !== null
+      ? `<span class="days-left-badge">${dl}D LEFT</span>`
+      : `×${h.target}/wk`;
+    return `
+      <div class="habit-item ${tierClass} ${done ? 'done' : ''}" onclick="toggleHabit('${h.id}')" id="habit-${h.id}">
+        <div class="habit-checkbox">${done ? '✓' : ''}</div>
+        <div class="habit-icon">${h.icon || '▸'}</div>
+        <div class="habit-name">${h.name}</div>
+        <div class="habit-target">${daysLeftStr}</div>
+      </div>`;
+  }
+
+  function toggleHabit(id) {
+    todayLog[id] = !todayLog[id];
+    const el = document.getElementById(`habit-${id}`);
+    if (el) {
+      el.classList.toggle('done', todayLog[id]);
+      el.querySelector('.habit-checkbox').textContent = todayLog[id] ? '✓' : '';
+    }
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = habits.length;
+    const done = habits.filter(h => todayLog[h.id]).length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `${done} / ${total}`;
+    document.getElementById('todayRate').innerHTML = `${pct}<span>%</span>`;
+  }
+
+  async function saveToday() {
+    try {
+      const notes = document.getElementById('notesArea').value;
+      await fetch(`${API}/api/logs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: todayStr, habits: todayLog, notes })
+      });
+      saveTodos();
+      await loadStats();
+      monthLogs[todayStr] = { habits: todayLog };
+      renderCalendar();
+      showToast('LOG COMMITTED ✓');
+    } catch(e) { showToast('SAVE FAILED', true); }
+  }
+
+  // ============ TODOS ============
+  function loadTodos() {
+    try {
+      const stored = localStorage.getItem('habitOS_todos');
+      todos = stored ? JSON.parse(stored) : [];
+      // Clean completed todos older than 3 days
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      todos = todos.filter(t => {
+        if (t.completed && t.completedAt) {
+          return new Date(t.completedAt) > threeDaysAgo;
+        }
+        return true;
+      });
+    } catch(e) { todos = []; }
+    updateTodosLeftStat();
+  }
+
+  function saveTodos() {
+    try {
+      localStorage.setItem('habitOS_todos', JSON.stringify(todos));
+    } catch(e) {}
+  }
+
+  function addTodo() {
+    const input = document.getElementById('todoInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const priority = document.getElementById('todoPriority').value;
+    todos.unshift({
+      id: 'todo_' + Date.now(),
+      text,
+      priority,
+      completed: false,
+      createdAt: todayStr,
+      completedAt: null
+    });
+    input.value = '';
+    saveTodos();
+    renderTodos();
+    updateTodosLeftStat();
+  }
+
+  function toggleTodo(id) {
+    const t = todos.find(t => t.id === id);
+    if (!t) return;
+    t.completed = !t.completed;
+    t.completedAt = t.completed ? new Date().toISOString() : null;
+    saveTodos();
+    renderTodos();
+    updateTodosLeftStat();
+  }
+
+  function deleteTodo(id) {
+    todos = todos.filter(t => t.id !== id);
+    saveTodos();
+    renderTodos();
+    updateTodosLeftStat();
+  }
+
+  function setFilter(f, btn) {
+    todoFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTodos();
+  }
+
+  function updateTodosLeftStat() {
+    const left = todos.filter(t => !t.completed).length;
+    document.getElementById('todosLeft').innerHTML = `${left}<span> tasks</span>`;
+  }
+
+  function renderTodos() {
+    const list = document.getElementById('todoList');
+    let filtered = todos;
+
+    if (todoFilter === 'active') filtered = todos.filter(t => !t.completed);
+    else if (todoFilter === 'done') filtered = todos.filter(t => t.completed);
+    else if (todoFilter === 'high') filtered = todos.filter(t => t.priority === 'high' && !t.completed);
+
+    if (!filtered.length) {
+      list.innerHTML = `<div class="todo-empty">// NO TASKS IN THIS VIEW</div>`;
+      return;
+    }
+
+    const prioLabel = { high: '🔴 HIGH', mid: '🟡 MID', low: '⚪ LOW' };
+
+    list.innerHTML = filtered.map(t => `
+      <div class="todo-item prio-${t.priority} ${t.completed ? 'completed' : ''}">
+        <div class="todo-checkbox" onclick="toggleTodo('${t.id}')">${t.completed ? '✓' : ''}</div>
+        <div class="todo-text" onclick="toggleTodo('${t.id}')">${t.text}</div>
+        <div class="todo-prio-badge">${prioLabel[t.priority] || t.priority}</div>
+        <button class="todo-del-btn" onclick="deleteTodo('${t.id}')">✕</button>
+      </div>`).join('');
+  }
+
+  // ============ CALENDAR ============
+  function renderCalendar() {
+    document.getElementById('calTitle').textContent = `${months[calMonth]} ${calYear}`;
+    const grid = document.getElementById('calGrid');
+    const dayHeaders = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    let html = dayHeaders.map(d => `<div class="cal-day-header">${d}</div>`).join('');
+
+    const first = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+
+    for (let i = 0; i < first; i++) html += `<div class="cal-day empty"></div>`;
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const isToday = dateStr === todayStr;
+      const isFuture = dateStr > todayStr;
+      const log = monthLogs[dateStr];
+
+      let status = '';
+      if (!isFuture && log) {
+        const done = Object.values(log.habits || {}).filter(Boolean).length;
+        const total = habits.length;
+        const pct = total ? done / total : 0;
+        if (pct >= 0.9) status = 'perfect';
+        else if (pct >= 0.5) status = 'partial';
+        else status = 'missed';
+      }
+
+      html += `<div class="cal-day ${isToday?'today':''} ${isFuture?'future':''} ${status}">
+        ${d}
+        ${status ? `<div class="cal-dot"></div>` : ''}
+      </div>`;
+    }
+
+    grid.innerHTML = html;
+  }
+
+  async function changeMonth(dir) {
+    calMonth += dir;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    if (calMonth < 0)  { calMonth = 11; calYear--; }
+    await loadMonthLogs();
+    renderCalendar();
+  }
+
+  // ============ MODAL ============
+  function openModal() {
+    const list = document.getElementById('modalHabitList');
+    list.innerHTML = habits.map((h, i) => `
+      <div class="modal-habit-row">
+        <input class="habit-icon-input" value="${h.icon||''}" placeholder="🔥" data-idx="${i}" data-field="icon"/>
+        <input class="habit-name-input" value="${h.name}" placeholder="Habit name" data-idx="${i}" data-field="name"/>
+        <select class="habit-tier-select" data-idx="${i}" data-field="tier">
+          <option ${h.tier===1?'selected':''} value="1">T1</option>
+          <option ${h.tier===2?'selected':''} value="2">T2</option>
+          <option ${h.tier===3?'selected':''} value="3">T3</option>
+        </select>
+        <input class="habit-target-input" value="${h.target||7}" type="number" min="1" max="7" data-idx="${i}" data-field="target"/>
+        <input class="habit-enddate-input" type="date" value="${h.endDate||''}" placeholder="end date" data-idx="${i}" data-field="endDate" title="Set end date for TEMP habits" style="${h.temp?'':'opacity:0.3'}"/>
+        <button class="del-habit-btn" onclick="deleteHabitRow(${i})">✕</button>
+      </div>`).join('');
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  function addHabitRow(isTemp) {
+    habits.push({
+      id: 'habit_' + Date.now(),
+      name: '',
+      icon: isTemp ? '⚡' : '▸',
+      tier: 1,
+      target: 7,
+      temp: isTemp,
+      endDate: isTemp ? '' : null
+    });
+    openModal();
+  }
+
+  function deleteHabitRow(idx) {
+    habits.splice(idx, 1);
+    openModal();
+  }
+
+  async function saveConfig() {
+    const rows = document.querySelectorAll('.modal-habit-row');
+    rows.forEach((row, i) => {
+      const inputs = row.querySelectorAll('[data-field]');
+      inputs.forEach(inp => {
+        const field = inp.dataset.field;
+        const idx = parseInt(inp.dataset.idx);
+        if (habits[idx]) {
+          if (field === 'tier' || field === 'target') {
+            habits[idx][field] = parseInt(inp.value);
+          } else {
+            habits[idx][field] = inp.value;
+          }
+          // Mark as temp if it has an endDate
+          if (field === 'endDate' && inp.value) {
+            habits[idx].temp = true;
+          }
+        }
+      });
+    });
+
+    habits = habits.map(h => ({
+      ...h,
+      id: h.id || 'habit_' + Date.now() + Math.random()
+    }));
+
+    try {
+      await fetch(`${API}/api/config`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ habits })
+      });
+      closeModal();
+      renderHabits();
+      showToast('CONFIG SAVED ✓');
+    } catch(e) { showToast('SAVE FAILED', true); }
+  }
+
+  function showToast(msg, error = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = error ? 'var(--accent2)' : 'var(--green)';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  init();
+</script>
+</body>
+</html>
